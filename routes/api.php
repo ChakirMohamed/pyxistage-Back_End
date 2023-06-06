@@ -28,15 +28,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware'=>['auth:sanctum']],function(){
+//Route::group(['middleware'=>['auth:sanctum']],function(){
     /*** Type Stage ***/
     Route::group(['prefix' => 'typeStages'], function () {
+
         Route::get('/', [TypeStageController::class, 'index']);
+
         Route::get('/{id}', [TypeStageController::class, 'show']);
+
         Route::post('/add', [TypeStageController::class, 'add']);
+
         Route::put('/update/{id}', [TypeStageController::class, 'update']);
+
         Route::delete('/delete/{id}', [TypeStageController::class, 'delete']);
+
     });
+
     /*** Stagiaire ***/
     Route::group(['prefix' => 'stagiaires'], function () {
         Route::get('/', [StagiaireController::class, 'index']);
@@ -93,7 +100,7 @@ Route::group(['prefix' => 'choix'], function () {
 
 
 
-/*les reponses des questions */ 
+/*les reponses des questions */
 Route::group(['prefix' => 'reponses'], function () {
     Route::get('/', [QuizQuestionsReponseController::class, 'index']);
     Route::get('/{id}', [QuizQuestionsReponseController::class, 'show']);
@@ -106,12 +113,12 @@ Route::group(['prefix' => 'reponses'], function () {
 
 
 
-    Route::get('/profile',[UserController::class,'profile']); 
-});
+    Route::get('/profile',[UserController::class,'profile']);
+//});
 
 /******** users et login ***************/
 Route::post('/register',[UserController::class,'register']);
-Route::post('/login',[UserController::class,'login']); 
+Route::post('/login',[UserController::class,'login']);
 
 
 
