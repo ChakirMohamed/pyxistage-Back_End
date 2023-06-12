@@ -39,10 +39,10 @@ class StagiaireController extends Controller
             $stagiaire->cvPath = $req->input('cvPath');
             $stagiaire->respo_id = $req->input('respo_id');
             $stagiaire->type_stage_id = $req->input('type_stage_id');
-            
+
 
             $stagiaire->save();
-            return json_encode(['isAdded' => '1']);
+            return json_encode(['isAdded' => '1','id'=>$stagiaire->id]);
         } catch (\Exception $e) {
             return json_encode(['isAdded' => '0', 'error' => $e->getMessage()]);
         }
@@ -67,14 +67,14 @@ class StagiaireController extends Controller
             return json_encode(['isUpdated' => '0', 'error' => $e->getMessage()]);
         }
     }
-    
+
 
 
     public function delete($id)
     {
         try {
             stagiaire::destroy($id);
-            
+
             return json_encode(['isDeleted' => '1']);
         } catch (\Exception $e) {
             return json_encode(['isDeleted' => '0', 'error' => $e->getMessage()]);

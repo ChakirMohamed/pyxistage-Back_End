@@ -6,6 +6,7 @@ use App\Http\Controllers\TypeStageController;
 use App\Http\Controllers\StagiaireController;
 use App\Http\Controllers\ResponsableController;
 use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\QuestionThemeController;
 use App\Http\Controllers\NiveauQuestionController;
 use App\Http\Controllers\QuestionController;
@@ -114,6 +115,10 @@ Route::group(['prefix' => 'reponses'], function () {
 
 
     Route::get('/profile',[UserController::class,'profile']);
+
+    // upload files
+    Route::post('/upload-file',[FileController::class, 'uploadFile']);
+
 //});
 
 /******** users et login ***************/

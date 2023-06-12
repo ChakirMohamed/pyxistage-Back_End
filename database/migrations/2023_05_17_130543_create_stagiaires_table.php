@@ -13,6 +13,7 @@ class CreateStagiairesTable extends Migration
      */
     public function up()
     {
+        
         Schema::create('stagiaires', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
@@ -24,13 +25,13 @@ class CreateStagiairesTable extends Migration
             $table->text('cvPath');
             $table->unsignedBigInteger('respo_id');
             $table->foreign('respo_id')->references('id')->on('users')->onDelete('cascade');
-            
+
             $table->unsignedBigInteger('type_stage_id');
             $table->foreign('type_stage_id')->references('id')->on('type_stages')->onDelete('cascade');
-            
+
             $table->timestamps();
 
-            
+
         });
     }
 
