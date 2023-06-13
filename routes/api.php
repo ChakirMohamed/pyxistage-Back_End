@@ -13,6 +13,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionChoixController;
 use App\Http\Controllers\QuizQuestionsReponseController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\sendInvitation;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,8 +117,15 @@ Route::group(['prefix' => 'reponses'], function () {
 
     Route::get('/profile',[UserController::class,'profile']);
 
+
     // upload files
     Route::post('/upload-file',[FileController::class, 'uploadFile']);
+    // get files
+    Route::get('/cv/{filename}', [FileController::class, 'show']);
+
+    // send invitation
+    Route::post('/send-invitation', [sendInvitation::class, 'sendInvitation']);
+
 
 //});
 
