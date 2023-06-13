@@ -21,7 +21,7 @@ class sendInvitation extends Controller
 
         $data = [
             'message' => 'This is the message content.',
-            'dateEntretien' =>$dateEntretien,
+            'dateEntretien' => $dateEntretien,
             'heureEntretien' =>$heureEntretien,
         ];
 
