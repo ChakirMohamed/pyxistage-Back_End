@@ -71,7 +71,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     /****************************************** Quiz *******************************************/
     /*** theme_quiz ***/
-    Route::group(['prefix' => 'theme'], function () {
+    Route::group(['prefix' => 'themes'], function () {
         Route::get('/', [QuestionThemeController::class, 'index']);
         Route::get('/{id}', [QuestionThemeController::class, 'show']);
         Route::post('/add', [QuestionThemeController::class, 'add']);
@@ -101,6 +101,20 @@ Route::group(['prefix' => 'choix'], function () {
 });
 
 
+/*** question ***/
+Route::prefix('questions')->group(function () {
+    Route::get('/cat_ques', [QuestionController::class, 'getQuestionsForEachCategory']);
+    Route::get('/',[QuestionController::class,'index']);
+    Route::get('/{id}',[QuestionController::class,'show']);
+    Route::post('/add',[QuestionController::class,'add']);
+    Route::put('/update/{id}',[QuestionController::class,'update']);
+    Route::delete('/delete/{id}',[QuestionController::class,'delete']);
+    Route::post('/insert', [QuestionController::class, 'insert']);
+
+
+});
+
+
 
 /*les reponses des questions */
 Route::group(['prefix' => 'reponses'], function () {
@@ -121,7 +135,7 @@ Route::group(['prefix' => 'reponses'], function () {
     // upload files
     Route::post('/upload-file',[FileController::class, 'uploadFile']);
     // get files
-    Route::get('/cv/{filename}', [FileController::class, 'show']);
+    Route::get('/cv/uploads/{filename}', [FileController::class, 'show']);
 
     // send invitation
     Route::post('/send-invitation', [sendInvitation::class, 'sendInvitation']);
@@ -156,12 +170,7 @@ Route::group(['prefix' => 'responsables'], function () {
 
 
 
-/*** question ***/
-Route::get('questions',[QuestionController::class,'index']);
-Route::get('questions/{id}',[QuestionController::class,'show']);
-Route::post('questions/add',[QuestionController::class,'add']);
-Route::put('questions/update/{id}',[QuestionController::class,'update']);
-Route::delete('questions/delete/{id}',[QuestionController::class,'delete']);
+
 // filter par niveau et|ou theme
 Route::delete('questions/f',[QuestionController::class,'filter']);
 

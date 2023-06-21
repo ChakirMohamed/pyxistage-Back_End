@@ -15,8 +15,16 @@ class FileController extends Controller
             $stagiaireId = $request->query('stagiaire_id');
             $file = $request->file('file');
             $filePath = $file->store('uploads'); // Store the file in the 'uploads' directory
-            // Mise à jour du champ "cv" de la table "stagiaires"
+
+            // trouver stagiaire
             $stagiaire = Stagiaire::find($stagiaireId);
+
+            // Supprimer l'ancien fichier s'il existe
+            if ($stagiaire->cvPath && Storage::exists($stagiaire->cvPath)) {
+                Storage::delete($stagiaire->cvPath);
+            }
+
+            //// Mettre à jour le champ "cvPath" avec le nouveau chemin du fichier
             $stagiaire->cvPath = $filePath;
             $stagiaire->save();
             return response()->json(['message' => 'File uploaded successfully']);
@@ -26,10 +34,10 @@ class FileController extends Controller
 
     public function show($filename)
     {
-        $path = storage_path('app/' . $filename );
+        $path = storage_path('app/uploads/' . $filename );
 
         if (!Storage::exists($path)) {
-            abort(404);
+            //abort(404);
         }
 
         return response()->file($path);
