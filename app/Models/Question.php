@@ -10,7 +10,8 @@ class Question extends Model
     protected $fillable = [
         'question',
         'theme_question_id',
-        'niveau_question_id'
+        'niveau_question_id',
+        'duration'
     ];
     use HasFactory;
 }

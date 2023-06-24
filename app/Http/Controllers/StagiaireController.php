@@ -52,13 +52,12 @@ class StagiaireController extends Controller
     public function update(Request $req, $id)
     {
         try {
-            $dataToUpdate = $req->all();
 
+            $dataToUpdate = $req->all();
             // Remove any fields with null values from the dataToUpdate array
             $dataToUpdate = array_filter($dataToUpdate, function ($value) {
                 return $value !== null;
             });
-
             // Update the fields that are not null
             stagiaire::where('id', $id)->update($dataToUpdate);
 

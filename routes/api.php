@@ -14,6 +14,7 @@ use App\Http\Controllers\QuestionChoixController;
 use App\Http\Controllers\QuizQuestionsReponseController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\sendInvitation;
+use App\Models\Quiz;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,18 +34,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::group(['middleware'=>['auth:sanctum']],function(){
     /*** Type Stage ***/
     Route::group(['prefix' => 'typeStages'], function () {
-
         Route::get('/', [TypeStageController::class, 'index']);
-
         Route::get('/{id}', [TypeStageController::class, 'show']);
-
         Route::post('/add', [TypeStageController::class, 'add']);
-
         Route::put('/update/{id}', [TypeStageController::class, 'update']);
-
         Route::delete('/delete/{id}', [TypeStageController::class, 'delete']);
-
     });
+
 
     /*** Stagiaire ***/
     Route::group(['prefix' => 'stagiaires'], function () {
@@ -65,10 +61,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::delete('/delete/{id}', [CommentsController::class, 'delete']);
     });
 
-
-
-
-
     /****************************************** Quiz *******************************************/
     /*** theme_quiz ***/
     Route::group(['prefix' => 'themes'], function () {
@@ -78,9 +70,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::put('/update/{id}', [QuestionThemeController::class, 'update']);
         Route::delete('/delete/{id}', [QuestionThemeController::class, 'delete']);
     });
-
-
-
 
     /*** niveau_quiz ***/
     Route::group(['prefix' => 'niveau'], function () {
@@ -92,13 +81,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     });
 
     /* choix */
-Route::group(['prefix' => 'choix'], function () {
-    Route::get('/', [QuestionChoixController::class, 'index']);
-    Route::get('/{id}', [QuestionChoixController::class, 'show']);
-    Route::post('/add', [QuestionChoixController::class, 'add']);
-    Route::put('/update/{id}', [QuestionChoixController::class, 'update']);
-    Route::delete('/delete/{id}', [QuestionChoixController::class, 'delete']);
-});
+    Route::group(['prefix' => 'choix'], function () {
+        Route::get('/', [QuestionChoixController::class, 'index']);
+        Route::get('/{id}', [QuestionChoixController::class, 'show']);
+        Route::post('/add', [QuestionChoixController::class, 'add']);
+        Route::put('/update/{id}', [QuestionChoixController::class, 'update']);
+        Route::delete('/delete/{id}', [QuestionChoixController::class, 'delete']);
+    });
 
 
 /*** question ***/
@@ -110,8 +99,6 @@ Route::prefix('questions')->group(function () {
     Route::put('/update/{id}',[QuestionController::class,'update']);
     Route::delete('/delete/{id}',[QuestionController::class,'delete']);
     Route::post('/insert', [QuestionController::class, 'insert']);
-
-
 });
 
 
@@ -124,6 +111,13 @@ Route::group(['prefix' => 'reponses'], function () {
     Route::put('/update/{id}', [QuizQuestionsReponseController::class, 'update']);
     Route::delete('/delete/{id}', [QuizQuestionsReponseController::class, 'delete']);
 });
+
+//Quiz generate
+Route::group(['prefix' => 'quiz'], function () {
+ Route::post('/generate', [QuestionController::class, 'generateQuiz']);
+
+});
+
 
 
 
@@ -147,7 +141,8 @@ Route::group(['prefix' => 'reponses'], function () {
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
-
+// Quiz pour stagiaire
+Route::post('Quiz/{urlQuiz}', [QuestionController::class, '']);
 
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Example Email</title>
+    <title>Invitation Pyxicom</title>
 </head>
 <body>
 <h5>Cher(e) stagiaire potentiel,</h5>
@@ -10,7 +10,7 @@
 </p>
 
 <p>
-    L'entretien est prévu le <strong>{{ $data['dateEntretien'] }} à {{ $data['heureEntretien'] }}</strong>  à notre bureau situé à [adresse]. Nous vous prions d'arriver à l'heure.
+    L'entretien est prévu le <strong>{{ $data['dateEntretien'] }} à {{ $data['heureEntretien'] }}</strong>  à notre bureau situé à 2éme étage, 24, Immeuble 2 Rue Jeddah، Rabat 10000. Nous vous prions d'arriver à l'heure.
 </p>
 
 <p>
@@ -26,7 +26,7 @@
 </p>
 <p>Cordialement,</p>
 
-<p>Hassan AIT TAMAA</p>
+
 
 <p>Pyxicom</p>
 </body>

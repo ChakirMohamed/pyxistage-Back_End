@@ -1,58 +1,61 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Mail\MailQuizUrl;
 use App\Models\Question;
 use App\Models\Question_Choix;
 use App\Models\Niveau_question;
 use App\Models\question_theme;
+use App\Models\Quiz;
 
-
+use Illuminate\Support\Facades\DB;
 use Exception;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class QuestionController extends Controller
 {
     //
 
 
-    public function index(){
-        try{
+    public function index()
+    {
+        try {
 
 
             //return Question::all();
             $questions = Question::all();
 
-        foreach ($questions as $question) {
-            $niveau = Niveau_question::find($question->niveau_question_id)->libelle;
-            $theme = question_theme::find($question->theme_question_id)->title;
+            foreach ($questions as $question) {
+                $niveau = Niveau_question::find($question->niveau_question_id)->libelle;
+                $theme = question_theme::find($question->theme_question_id)->title;
 
-            $question->niveau = $niveau;
-            $question->theme = $theme;
-        }
+                $question->niveau = $niveau;
+                $question->theme = $theme;
+            }
 
-        return response()->json($questions);
-
+            return response()->json($questions);
         } catch (\Exception $e) {
             return json_encode(['error' => $e->getMessage()]);
         }
     }
 
-    public function show($id){
-        try{
+    public function show($id)
+    {
+        try {
 
             $question = Question::find($id);
 
             $niveau = Niveau_question::find($question->niveau_question_id)->libelle;
-            $theme = question_theme::find($question->theme_question_id)->title ;
+            $theme = question_theme::find($question->theme_question_id)->title;
 
             //return // je veux ajouter les variables $niveau et $theme au objet $question et le return
             $question->niveau = $niveau;
             $question->theme = $theme;
 
             return response()->json($question);
-
-
         } catch (\Exception $e) {
             return json_encode(['error' => $e->getMessage()]);
         }
@@ -103,21 +106,21 @@ class QuestionController extends Controller
             return json_encode(['isDeleted' => '0', 'error' => $e->getMessage()]);
         }
     }
-
-    public function insert(Request $req){
-
+    public function insert(Request $req)
+    {
         //return response()->json($req);
-        try{
+        try {
             $questions = $req->questions;
-            $catId =intval($req->categorieId);
+            $catId = intval($req->categorieId);
             $nivId = intval($req->niveauId);
             // Parcourir chaque question
             foreach ($questions as $question) {
                 // Insérer la question et obtenir son ID
                 $questionModel = Question::create([
                     'question' => $question['questionText'],
-                    'niveau_question_id' =>$nivId,
-                    'theme_question_id' =>$catId
+                    'duration' => $question['questionDuree'],
+                    'niveau_question_id' => $nivId,
+                    'theme_question_id' => $catId
                 ]);
                 $questionId = $questionModel->id;
 
@@ -132,8 +135,7 @@ class QuestionController extends Controller
                 }
             }
             return response()->json(['message' => 'success']);
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
 
@@ -146,8 +148,6 @@ class QuestionController extends Controller
 
         try {
             $categories = question_theme::all(); // Assuming you have a model named 'Categorie' for categories
-
-
             $questionsForEachCategory = [];
 
             $i = 0;
@@ -155,9 +155,7 @@ class QuestionController extends Controller
                 $categoryId = $category->id;
                 $questions = Question::where('theme_question_id', $categoryId)->get();
                 $i++;
-
                 $questionsForEachCategory[$category->title] = $questions;
-
             }
 
             return response()->json($questionsForEachCategory);
@@ -166,7 +164,79 @@ class QuestionController extends Controller
         }
     }
 
+    public function generateQuiz(Request $req)
+    {
+        try {
 
+            $req->validate([
+                'niveau_question_id' => 'required',
+                'theme_question_id' => 'required',
+                'stagiaire_id' => 'required',
+                'number_question' => 'required'
+            ]);
+
+            $uniqueUrl = md5(uniqid(rand(), true));
+            $idNiv = intval($req->niveau_question_id);
+            $idCat = intval($req->theme_question_id);
+            $idStagiaire = intval($req->stagiaire_id);
+            $nbrQuestion = intval($req->number_question);
+            $hostQuiz = $req->hostQuiz;
+
+            $randomQuestionIds = DB::table('questions')
+                ->where('niveau_question_id', $idNiv)
+                ->where('theme_question_id', $idCat)
+                ->inRandomOrder()
+                ->take($nbrQuestion)
+                ->pluck('id');
+
+            // si le nombre des question exist dans base donnees insuffisant
+            if (count($randomQuestionIds) < $nbrQuestion) {
+                return response()->json(["message", "Nombre des question existe insuffisant"]);
+            }
+
+            $quiz = Quiz::create([
+                'stagiaire_id' => $idStagiaire,
+                'niveau_question_id' => $idNiv,
+                'theme_question_id' => $idCat,
+                'url' => $uniqueUrl,
+            ]);
+
+            $data = [];
+
+            foreach ($randomQuestionIds as $questionId) {
+                $data[] = [
+                    'quiz_id' => $quiz->id,
+                    'question_id' => $questionId
+                ];
+            }
+            DB::table('quiz__questions')->insert($data);
+            
+            $this->sendQuizUrl($req->mail,$hostQuiz.$quiz->url);
+
+            return response()->json($quiz);
+
+            /** get quiz par lien */
+            // $quiz = Quiz::where('unique_url', $uniqueUrl)->first();
+
+            // //if (!$quiz || $quiz->expiration_date < now()) {
+            // if (!$quiz ) {
+            //     return response()->json(['message' => "quiz n'existe pas"], 400);
+            // }
+            // $questions = Question::where('theme_question_id', $quiz->theme_question_id)
+            // ->where('niveau_question_id', $niveauId)
+            // ->get();
+        } catch (\Exception $e) {
+            //throw $th;
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function sendQuizUrl($email,$url){
+        $data = [
+            'url'=>$url
+        ];
+        Mail::to($email)->send(new MailQuizUrl($data));
+    }
 
     public function filter(Request $req)
     {
@@ -193,6 +263,4 @@ class QuestionController extends Controller
         return $records;
         */
     }
-
-
 }
