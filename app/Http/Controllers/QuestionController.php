@@ -181,6 +181,7 @@ class QuestionController extends Controller
             $idStagiaire = intval($req->stagiaire_id);
             $nbrQuestion = intval($req->number_question);
             $hostQuiz = $req->hostQuiz;
+            $mail = $req->mail;
 
             $randomQuestionIds = DB::table('questions')
                 ->where('niveau_question_id', $idNiv)
@@ -210,8 +211,8 @@ class QuestionController extends Controller
                 ];
             }
             DB::table('quiz__questions')->insert($data);
-            
-            $this->sendQuizUrl($req->mail,$hostQuiz.$quiz->url);
+
+            $this->sendQuizUrl($mail,$hostQuiz.$quiz->url);
 
             return response()->json($quiz);
 
