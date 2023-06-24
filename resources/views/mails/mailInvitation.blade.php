@@ -10,7 +10,9 @@
 </p>
 
 <p>
-    L'entretien est prévu le <strong>{{ $data['dateEntretien'] }} à {{ $data['heureEntretien'] }}</strong>  à notre bureau situé à 2éme étage, 24, Immeuble 2 Rue Jeddah، Rabat 10000. Nous vous prions d'arriver à l'heure.
+    L'entretien est prévu le
+    <strong>{{ $data['dateEntretien'] }} à {{ $data['heureEntretien'] }}</strong>
+    <strong> à notre bureau situé à 2éme étage, 24, Immeuble 2 Rue Jeddah، Rabat 10000. Nous vous prions d'arriver à l'heure.</strong>
 </p>
 
 <p>
