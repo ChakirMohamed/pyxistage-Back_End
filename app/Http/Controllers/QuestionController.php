@@ -241,8 +241,23 @@ class QuestionController extends Controller
         ->whereIn('id', $questionIds)
         ->get();
 
-        return response()->json($questions);
+        // Iterate through each question
+        foreach ($questions as $question) {
+            // Get the question ID
+            $questionId = $question->id;
+
+            // Fetch the responses for the current question
+            $responses = Question_Choix::where('question_id', $questionId)->get();
+
+            // Add the responses to the question object
+            $question->responses = $responses;
+        }
+
+        return response()->json(['questions' => $questions]);
     }
+
+    
+
 
     public function sendQuizUrl($email,$url){
         $data = [

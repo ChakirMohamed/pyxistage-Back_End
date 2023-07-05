@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*** question ***/
 Route::prefix('questions')->group(function () {
+
     Route::get('/cat_ques', [QuestionController::class, 'getQuestionsForEachCategory']);
     Route::get('/',[QuestionController::class,'index']);
     Route::get('/{id}',[QuestionController::class,'show']);
@@ -126,13 +127,10 @@ Route::group(['prefix' => 'quiz'], function () {
 
 
     Route::get('/profile',[UserController::class,'profile']);
-
-
     // upload files
     Route::post('/upload-file',[FileController::class, 'uploadFile']);
     // get files
     Route::get('/cv/uploads/{filename}', [FileController::class, 'show']);
-
     // send invitation
     Route::post('/send-invitation', [sendInvitation::class, 'sendInvitation']);
 
