@@ -216,20 +216,32 @@ class QuestionController extends Controller
 
             return response()->json($quiz);
 
-            /** get quiz par lien */
-            // $quiz = Quiz::where('unique_url', $uniqueUrl)->first();
 
-            // //if (!$quiz || $quiz->expiration_date < now()) {
-            // if (!$quiz ) {
-            //     return response()->json(['message' => "quiz n'existe pas"], 400);
-            // }
-            // $questions = Question::where('theme_question_id', $quiz->theme_question_id)
-            // ->where('niveau_question_id', $niveauId)
-            // ->get();
         } catch (\Exception $e) {
             //throw $th;
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getQuestionForQuiz($quizUrl){
+        /** get quiz par lien */
+        $quiz = Quiz::where('url', $quizUrl)->first();
+
+        //if (!$quiz || $quiz->expiration_date < now()) {
+        if (!$quiz ) {
+            return response()->json(['message' => "quiz n'existe pas"], 400);
+        }
+        $questionIds = DB::table('quiz__questions')
+        ->where('quiz_id',$quiz->id)
+        ->pluck('id');
+
+
+
+        $questions = DB::table('questions')
+        ->whereIn('id', $questionIds)
+        ->get();
+
+        return response()->json($questions);
     }
 
     public function sendQuizUrl($email,$url){

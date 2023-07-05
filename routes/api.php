@@ -14,6 +14,7 @@ use App\Http\Controllers\QuestionChoixController;
 use App\Http\Controllers\QuizQuestionsReponseController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\sendInvitation;
+use App\Http\Controllers\QuizController;
 use App\Models\Quiz;
 
 /*
@@ -123,6 +124,7 @@ Route::group(['prefix' => 'quiz'], function () {
 
 
 
+
     Route::get('/profile',[UserController::class,'profile']);
 
 
@@ -142,7 +144,11 @@ Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
 // Quiz pour stagiaire
-Route::post('Quiz/{urlQuiz}', [QuestionController::class, '']);
+Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
+Route::get('/quiz/show/{urlQuiz}', [QuizController::class, 'show']);
+
+
+
 
 
 
@@ -167,6 +173,6 @@ Route::group(['prefix' => 'responsables'], function () {
 
 
 // filter par niveau et|ou theme
-Route::delete('questions/f',[QuestionController::class,'filter']);
+Route::get('questions/f',[QuestionController::class,'filter']);
 
 
