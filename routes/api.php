@@ -144,6 +144,7 @@ Route::post('/login',[UserController::class,'login']);
 
 // Quiz pour stagiaire
 Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
+
 Route::get('/quiz/show/{urlQuiz}', [QuizController::class, 'show']);
 Route::post('/quiz/reponses/insert', [QuizQuestionChoiceController::class, 'insert']);
 

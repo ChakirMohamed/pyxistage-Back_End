@@ -193,7 +193,7 @@ class QuestionController extends Controller
 
             // si le nombre des question exist dans base donnees insuffisant
             if (count($randomQuestionIds) < $nbrQuestion) {
-                return response()->json(["message", "Nombre des question existe insuffisant"]);
+                return response()->json(["message", "Nombre des question existe insuffisant"],400);
             }
 
             $quiz = Quiz::create([
@@ -225,7 +225,8 @@ class QuestionController extends Controller
     }
 
     public function getQuestionForQuiz($quizUrl){
-        /** get quiz par lien */
+        try{
+            /** get quiz par lien */
         $quiz = Quiz::where('url', $quizUrl)->first();
 
         //if (!$quiz || $quiz->expiration_date < now()) {
@@ -259,6 +260,12 @@ class QuestionController extends Controller
         }
 
         return response()->json(['questions' => $questions]);
+        }
+        catch (\Exception $e) {
+            //throw $th;
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+
     }
 
 
