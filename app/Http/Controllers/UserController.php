@@ -37,7 +37,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $this->validate($request,[
-            
+
             'email'=>'required',
             'password'=>'required'
 
@@ -47,7 +47,10 @@ class UserController extends Controller
         if (isset($user->id)) {
             if(Hash::check($request->password,$user->password)){
                 $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json(['token' => $token], 200);
+                $user->token = $token;
+                return response()->json([
+                    'user' => $user
+                ], 200);
             }
         }
 

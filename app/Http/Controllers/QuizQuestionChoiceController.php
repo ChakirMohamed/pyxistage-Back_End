@@ -82,4 +82,9 @@ class QuizQuestionChoiceController extends Controller
     {
         //
     }
+
+
+    public function insert(){
+        
+    }
 }

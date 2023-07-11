@@ -15,6 +15,7 @@ use App\Http\Controllers\QuizQuestionsReponseController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\sendInvitation;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionChoiceController;
 use App\Models\Quiz;
 
 /*
@@ -144,6 +145,7 @@ Route::post('/login',[UserController::class,'login']);
 // Quiz pour stagiaire
 Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
 Route::get('/quiz/show/{urlQuiz}', [QuizController::class, 'show']);
+Route::post('/quiz/reponses/insert', [QuizQuestionChoiceController::class, 'insert']);
 
 
 

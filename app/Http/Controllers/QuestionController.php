@@ -118,7 +118,8 @@ class QuestionController extends Controller
                 // Insérer la question et obtenir son ID
                 $questionModel = Question::create([
                     'question' => $question['questionText'],
-                    'duration' => $question['questionDuree'],
+                    //'duration' => $question['questionDuree'],
+                    'duration' => '00:30',
                     'niveau_question_id' => $nivId,
                     'theme_question_id' => $catId
                 ]);
@@ -249,6 +250,10 @@ class QuestionController extends Controller
             // Fetch the responses for the current question
             $responses = Question_Choix::where('question_id', $questionId)->get();
 
+            foreach($responses as $c){
+                $c->selected = false;
+            }
+
             // Add the responses to the question object
             $question->responses = $responses;
         }
@@ -256,7 +261,7 @@ class QuestionController extends Controller
         return response()->json(['questions' => $questions]);
     }
 
-    
+
 
 
     public function sendQuizUrl($email,$url){
