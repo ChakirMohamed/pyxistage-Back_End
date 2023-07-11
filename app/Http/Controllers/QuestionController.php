@@ -235,7 +235,7 @@ class QuestionController extends Controller
         }
         $questionIds = DB::table('quiz__questions')
         ->where('quiz_id',$quiz->id)
-        ->pluck('id');
+        ->pluck('question_id');
 
 
 
@@ -259,7 +259,7 @@ class QuestionController extends Controller
             $question->responses = $responses;
         }
 
-        return response()->json(['questions' => $questions]);
+        return response()->json(['questions' => $questions,'quiz'=>$quiz]);
         }
         catch (\Exception $e) {
             //throw $th;
