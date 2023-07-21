@@ -117,14 +117,8 @@ Route::group(['prefix' => 'reponses'], function () {
 
 //Quiz generate
 Route::group(['prefix' => 'quiz'], function () {
- Route::post('/generate', [QuestionController::class, 'generateQuiz']);
-
+    Route::post('/generate', [QuestionController::class, 'generateQuiz']);
 });
-
-
-
-
-
 
 
     Route::get('/profile',[UserController::class,'profile']);

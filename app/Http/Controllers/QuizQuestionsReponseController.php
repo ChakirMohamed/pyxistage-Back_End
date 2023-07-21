@@ -35,6 +35,7 @@ class QuizQuestionsReponseController extends Controller
 
             $Quiz_Questions_Reponse->save();
             return json_encode(['isAdded' => '1']);
+
         } catch (\Exception $e) {
             return json_encode(['isAdded' => '0', 'error' => $e->getMessage()]);
         }
@@ -63,10 +64,10 @@ class QuizQuestionsReponseController extends Controller
     {
         try {
             Quiz_Questions_Reponse::destroy($id);
-            
-            return json_encode(['isDeleted' => '1']);
+
+            return json_encode(['isAdded' => '1']);
         } catch (\Exception $e) {
-            return json_encode(['isDeleted' => '0', 'error' => $e->getMessage()]);
+            return json_encode(['isAdded' => '0', 'error' => $e->getMessage()]);
         }
     }
 

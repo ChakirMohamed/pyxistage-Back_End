@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QuizQuestionChoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QuizQuestionChoiceController extends Controller
 {
@@ -84,7 +85,17 @@ class QuizQuestionChoiceController extends Controller
     }
 
 
-    public function insert(){
-        
+    public function insert(Request $req){
+
+        try
+        {
+        $formData = $req->all(); // Get an array representation of the form data
+        DB::table('quiz_question_choices')->insert($formData);
+
+        return json_encode(['isDeleted' => '1']);
+    } catch (\Exception $e) {
+        return json_encode(['isDeleted' => '0', 'error' => $e->getMessage()]);
+    }
+
     }
 }
