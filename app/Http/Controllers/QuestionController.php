@@ -215,7 +215,7 @@ class QuestionController extends Controller
 
             $this->sendQuizUrl($mail,$hostQuiz.$quiz->url);
 
-            return response()->json($quiz);
+            return response()->json(['fullUrl'=>$hostQuiz.$quiz->url,'quiz'=>$quiz]);
 
 
         } catch (\Exception $e) {
