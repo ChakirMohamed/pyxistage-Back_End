@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\stagiaire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class StagiaireController extends Controller
 {
@@ -72,6 +74,15 @@ class StagiaireController extends Controller
     public function delete($id)
     {
         try {
+
+            // trouver stagiaire
+            $stagiaire = Stagiaire::find($id);
+
+            // Supprimer l'ancien fichier s'il existe
+            if ($stagiaire->cvPath && Storage::exists($stagiaire->cvPath)) {
+                Storage::delete($stagiaire->cvPath);
+            }
+            
             stagiaire::destroy($id);
 
             return json_encode(['isDeleted' => '1']);
