@@ -29,9 +29,17 @@ use App\Models\Quiz;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/register',[UserController::class,'register']);
+Route::post('/login',[UserController::class,'login']);
+
+Route::group(['middleware'=>['auth:sanctum']],function(){
+    Route::get('/user', [UserController::class, 'profile']);
+    Route::get('/logout',[UserController::class,'logout']);
+
 });
+
+
+
 
 //Route::group(['middleware'=>['auth:sanctum']],function(){
     /*** Type Stage ***/
@@ -121,7 +129,7 @@ Route::group(['prefix' => 'quiz'], function () {
 });
 
 
-    Route::get('/profile',[UserController::class,'profile']);
+
     // upload files
     Route::post('/upload-file',[FileController::class, 'uploadFile']);
     // get files
@@ -133,8 +141,7 @@ Route::group(['prefix' => 'quiz'], function () {
 //});
 
 /******** users et login ***************/
-Route::post('/register',[UserController::class,'register']);
-Route::post('/login',[UserController::class,'login']);
+
 
 // Quiz pour stagiaire
 Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
