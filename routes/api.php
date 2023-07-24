@@ -29,19 +29,13 @@ use App\Models\Quiz;
 |
 */
 
-Route::post('/register',[UserController::class,'register']);
-Route::post('/login',[UserController::class,'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
 
-Route::group(['middleware'=>['auth:sanctum']],function(){
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user', [UserController::class, 'profile']);
-    Route::post('/logout',[UserController::class,'logout']);
+    Route::post('/logout', [UserController::class, 'logout']);
 
-});
-
-
-
-
-//Route::group(['middleware'=>['auth:sanctum']],function(){
     /*** Type Stage ***/
     Route::group(['prefix' => 'typeStages'], function () {
         Route::get('/', [TypeStageController::class, 'index']);
@@ -61,7 +55,6 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::delete('/delete/{id}', [StagiaireController::class, 'delete']);
     });
 
-
     /*** Comments ***/
     Route::group(['prefix' => 'comments'], function () {
         Route::get('stagiaire/{idStagiaire}', [CommentsController::class, 'comments_stagiaire']);
@@ -70,6 +63,13 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::put('/update/{id}', [CommentsController::class, 'update']);
         Route::delete('/delete/{id}', [CommentsController::class, 'delete']);
     });
+
+
+    //Quiz generate
+    Route::group(['prefix' => 'quiz'], function () {
+        Route::post('/generate', [QuestionController::class, 'generateQuiz']);
+    });
+
 
     /****************************************** Quiz *******************************************/
     /*** theme_quiz ***/
@@ -100,52 +100,65 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
     });
 
 
-/*** question ***/
-Route::prefix('questions')->group(function () {
+    /*** question ***/
+    Route::prefix('questions')->group(function () {
 
-    Route::get('/cat_ques', [QuestionController::class, 'getQuestionsForEachCategory']);
-    Route::get('/',[QuestionController::class,'index']);
-    Route::get('/{id}',[QuestionController::class,'show']);
-    Route::post('/add',[QuestionController::class,'add']);
-    Route::put('/update/{id}',[QuestionController::class,'update']);
-    Route::delete('/delete/{id}',[QuestionController::class,'delete']);
-    Route::post('/insert', [QuestionController::class, 'insert']);
-});
+        Route::get('/cat_ques', [QuestionController::class, 'getQuestionsForEachCategory']);
+        Route::get('/', [QuestionController::class, 'index']);
+        Route::get('/{id}', [QuestionController::class, 'show']);
+        Route::post('/add', [QuestionController::class, 'add']);
+        Route::put('/update/{id}', [QuestionController::class, 'update']);
+        Route::delete('/delete/{id}', [QuestionController::class, 'delete']);
+        Route::post('/insert', [QuestionController::class, 'insert']);
+    });
 
 
 
-/*les reponses des questions */
-Route::group(['prefix' => 'reponses'], function () {
-    Route::get('/', [QuizQuestionsReponseController::class, 'index']);
-    Route::get('/{id}', [QuizQuestionsReponseController::class, 'show']);
-    Route::post('/add', [QuizQuestionsReponseController::class, 'add']);
-    Route::put('/update/{id}', [QuizQuestionsReponseController::class, 'update']);
-    Route::delete('/delete/{id}', [QuizQuestionsReponseController::class, 'delete']);
-});
+    /*les reponses des questions */
+    Route::group(['prefix' => 'reponses'], function () {
+        Route::get('/', [QuizQuestionsReponseController::class, 'index']);
+        Route::get('/{id}', [QuizQuestionsReponseController::class, 'show']);
+        Route::post('/add', [QuizQuestionsReponseController::class, 'add']);
+        Route::put('/update/{id}', [QuizQuestionsReponseController::class, 'update']);
+        Route::delete('/delete/{id}', [QuizQuestionsReponseController::class, 'delete']);
+    });
 
-//Quiz generate
-Route::group(['prefix' => 'quiz'], function () {
-    Route::post('/generate', [QuestionController::class, 'generateQuiz']);
-});
+    // filter par niveau et|ou theme
+    Route::get('questions/f', [QuestionController::class, 'filter']);
+
 
 
 
     // upload files
-    Route::post('/upload-file',[FileController::class, 'uploadFile']);
+    Route::post('/upload-file', [FileController::class, 'uploadFile']);
     // get files
     Route::get('/cv/uploads/{filename}', [FileController::class, 'show']);
     // send invitation
     Route::post('/send-invitation', [sendInvitation::class, 'sendInvitation']);
+});
+
+
+
+
+//Route::group(['middleware'=>['auth:sanctum']],function(){
+
+
+
+
+
+
+
+
+
 
 
 //});
 
-/******** users et login ***************/
+
 
 
 // Quiz pour stagiaire
 Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
-
 Route::get('/quiz/show/{urlQuiz}', [QuizController::class, 'show']);
 Route::post('/quiz/reponses/insert', [QuizQuestionChoiceController::class, 'insert']);
 
@@ -167,14 +180,4 @@ Route::group(['prefix' => 'responsables'], function () {
     Route::delete('/delete/{id}', [ResponsableController::class, 'delete']);
 });
 
-*/
-
-
-
-
-
-
-// filter par niveau et|ou theme
-Route::get('questions/f',[QuestionController::class,'filter']);
-
-
+ */
