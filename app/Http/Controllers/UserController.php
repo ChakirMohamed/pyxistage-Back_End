@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
+
+
 class UserController extends Controller
 {
     //
@@ -83,10 +85,17 @@ class UserController extends Controller
         }
     }
 
-    public function logout(){
-        $cookie = Cookie::forget('jwt');
-        return response([
-            'message'=>'logedout'
-        ])->withCookie($cookie);
+    public function logout(Request $request){
+        // $cookie = Cookie::forget('jwt');
+        // return response([
+        //     'message'=>'logedout'
+        // ])->withCookie($cookie);
+
+        $user = $request->user();
+        $user->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+
+        return response(["message"=>'success']);
     }
 }

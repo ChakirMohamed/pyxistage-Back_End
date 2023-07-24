@@ -46,7 +46,8 @@ class StagiaireController extends Controller
             $stagiaire->save();
             return json_encode(['isAdded' => '1','id'=>$stagiaire->id]);
         } catch (\Exception $e) {
-            return json_encode(['isAdded' => '0', 'error' => $e->getMessage()]);
+            error_log($e->getMessage());
+            return response()->json(['isAdded' => '0', 'error' => $e->getMessage()],400);
         }
     }
 
@@ -65,7 +66,7 @@ class StagiaireController extends Controller
 
             return json_encode(['isUpdated' => '1']);
         } catch (\Exception $e) {
-            return json_encode(['isUpdated' => '0', 'error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()],400);
         }
     }
 
@@ -82,12 +83,12 @@ class StagiaireController extends Controller
             if ($stagiaire->cvPath && Storage::exists($stagiaire->cvPath)) {
                 Storage::delete($stagiaire->cvPath);
             }
-            
+
             stagiaire::destroy($id);
 
             return json_encode(['isDeleted' => '1']);
         } catch (\Exception $e) {
-            return json_encode(['isDeleted' => '0', 'error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()],400);
         }
     }
 }
