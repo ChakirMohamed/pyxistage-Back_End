@@ -161,6 +161,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('/quiz/{urlQuiz}', [QuestionController::class, 'getQuestionForQuiz']);
 Route::get('/quiz/show/{urlQuiz}', [QuizController::class, 'show']);
 Route::post('/quiz/reponses/insert', [QuizQuestionChoiceController::class, 'insert']);
+Route::get('/quiz/score/{id}', [QuizQuestionChoiceController::class, 'calculateQuizScore']);
 
 
 

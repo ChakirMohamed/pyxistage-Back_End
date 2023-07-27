@@ -49,15 +49,16 @@ class QuizQuestionChoiceController extends Controller
     public function calculateQuizScore($quizId)
 {
     // Récupérer les choix du stagiaire pour le quiz donné
-    $quizChoices = QuizQuestionChoice::where('quiz_id', $quizId)->get();
-    return $quizChoices;
+    $quizChoicesIds = QuizQuestionChoice::where('quiz_id', $quizId)->pluck('choice_id');
+    //return $quizChoicesIds;
 
     // Récupérer les choix corrects pour chaque question du quiz
-    //$questionIds = $quizChoices->pluck('choice.question_id')->unique();
-    $questionIds = Question_choix::whereIn('id',$quizChoices->choice_id)->pluck('question_id')->unique();
-    return $questionIds;
+    // $questionIds = $quizChoices->pluck('choice.question_id')->unique();
 
-    $correctChoices = Question_choix::whereIn('', $questionIds)
+    $questionIds = Question_choix::whereIn('id',$quizChoicesIds)->pluck('question_id')->unique();
+    //return $questionIds;
+
+    $correctChoices = Question_choix::whereIn('question_id', $questionIds)
         ->where('estVrai', true)
         ->get();
 
@@ -65,7 +66,7 @@ class QuizQuestionChoiceController extends Controller
     $score = 0;
     foreach ($questionIds as $questionId) {
         $correctChoiceIds = $correctChoices->where('question_id', $questionId)->pluck('id');
-        $selectedChoiceIds = $quizChoices->where('question_id', $questionId)->pluck('choice_id');
+        $selectedChoiceIds = $quizChoicesIds->where('question_id', $questionId)->pluck('choice_id');
 
         // Check if all the correct choices are among the selected choices and vice versa
         $isAllCorrectSelected = $correctChoiceIds->diff($selectedChoiceIds)->isEmpty();
@@ -170,7 +171,7 @@ class QuizQuestionChoiceController extends Controller
         try {
 
             $formData = $req->all(); // Get an array representation of the form data
-            // DB::table('quiz_question_choices')->insert($formData);
+            DB::table('quiz_question_choices')->insert($formData);
 
             // recupere quiz id pour calculer score
             $quizId = $formData[0]['quiz_id'];
